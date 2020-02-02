@@ -1,0 +1,13 @@
+#How to Give All Permissions in Ubuntu
+sudo -i
+sudo chmod a+rwx /path/to/file
+
+#Set the environment
+PATH=$PATH:/home/yonggang/homer/bin/
+source ~/.bash_profile
+
+##Build Index for alignment with bowtie2
+wget http://hgdownload.cse.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz
+gunzip hg38.fa.gz
+
+bowtie2-build hg38.fa hg38
