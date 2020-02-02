@@ -11,3 +11,7 @@ wget http://hgdownload.cse.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz
 gunzip hg38.fa.gz
 
 bowtie2-build hg38.fa hg38
+
+##Align sequences with bowtie
+bowtie2 -p 8 -x /home/yonggang/lcl1_ChIPseq/hg38/hg38 LCL1-1_CAGATC.fq > LCL1-1_CAGATC.sam
+bowtie2 -p 8 -x /home/yonggang/lcl1_ChIPseq/hg38/hg38 LCL1-1-Ab.1749_8.R1.fq > LCL1-1-Ab.1749_8.R1.sam
