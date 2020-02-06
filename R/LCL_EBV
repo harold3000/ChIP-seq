@@ -1,0 +1,115 @@
+#EBNA3C and EBNA2 in LCLs from Public Geodata
+
+setwd("Z:/Bioinformatics/Yonggang/geodata")
+
+#hLCL-E3C.....................................................................................................
+
+par(mfrow=c(2,2))
+
+#Genomic annotation
+tiff(filename="hLCL_E3C_genomic_annotation.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL_E3C_a <- read.csv(file="Z:/Bioinformatics/Yonggang/geodata/Combined-e3c/hLCL_E3C_R&ggplot2/e3c_genomic_annotation.csv", header=TRUE)
+annota <- LCL_E3C_a$Annotation
+lbls   <- LCL_E3C_a$Number.of.peaks
+pct <- round(lbls/sum(lbls)*100)
+lbls2 <- paste(annota, " ", pct, "%", sep="")
+pie(lbls, labels=lbls2, edges=100, radius=0.5, lty="blank", cex=1, col=rainbow(length(lbls2)), clockwise=FALSE, main="E2F6 genomic annotation")
+dev.off()
+
+#Histograms
+tiff(filename="hLCL_E3C_histograms4000.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL_E3C_b <- read.csv(file="Z:/Bioinformatics/Yonggang/geodata/Combined-e3c/hLCL_E3C_R&ggplot2/e3c_histograms4000.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(lty=1, lwd=2)
+par(col="black", pin=c(3,3))
+plot(LCL_E3C_b, type="l",col="blue", bty="o",main="EBNA3C", xlab="Distance from center", ylab="ChIP coverage", cex.lab=1.2)
+library(Hmisc)
+minor.tick(nx=2, ny=2,tick.ratio = 0.5)
+par(opar)
+dev.off()
+
+#Go analysis
+tiff(filename="hLCL1_1_go_analysis.tif", width=12, height=8, units="in", compression = "lzw", res=600)
+LCL1_1c <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-1/hLCL1_1_R&ggplot2/hLCL1_1_go_analysis.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(pin=c(3,3), cex.axis=0.5, mai=c(1,6,1,1))
+barplot(LCL1_1c$X.ln.P., width=1, border=NULL,cex.names=1,cex.lab=1,ylim=c(0,20), xlim=c(0,300),names.arg=LCL1_1c$hLCL1_1_GO.ID, xlab="-ln(P)", main="E2F6 Go Analysis",col=rainbow(20), las=2, horiz=TRUE)
+library(Hmisc)
+minor.tick(nx=2, ny=NULL, tick.ratio = 0.5)
+par(opar)
+dev.off()
+
+#Motif Histograms
+tiff(filename="hLCL1_1_motifshistograms.tif", width=6, height=6, units="in", compression = "lzw", res=600)
+LCL1_1d <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-1/hLCL1_1_R&ggplot2/knownmotif1345_output.csv", header=TRUE)
+library(ggplot2)
+library(reshape2)
+motifs <- melt(LCL1_1d, id.vars="Distance.from.Center")
+hLCL11motif <- ggplot(motifs, aes(x=Distance.from.Center,y=value,group=variable,colour=variable))+geom_line(linetype="solid",size=1)+scale_x_continuous(limits=c(-500,500),breaks=seq(-500,500,250))
+hLCL11motif+theme_bw()+theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
+                             axis.title.x=element_text(face="bold",size=15,margin=margin(10,0,0,0)),axis.title.y=element_text(face="bold",size=15,margin=margin(0,10,0,0)),
+                             axis.text.x=element_text(size=12),axis.text.y=element_text(size=12),
+                             legend.title=element_blank(),legend.text=element_text(size=12),
+                             legend.key=element_blank(),legend.position=c(0.88,0.88))+ggtitle("E2F6 binding Moifs")+xlab("Distance from Peak")+ylab("Sites per bp per peak")
+dev.off()
+
+
+#hLCL-EBNA2.....................................................................................................
+
+#Genomic annotation
+tiff(filename="hLCL_EBNA2_genomic_annotation.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL_EBNA2_a <- read.csv(file="Z:/Bioinformatics/Yonggang/geodata/Combined-ebna2/hLCL_EBNA2_R&ggplot2/ebna2_genomic_annotation.csv", header=TRUE)
+annota <- LCL_EBNA2_a$Annotation
+lbls   <- LCL_EBNA2_a$Number.of.peaks
+pct <- round(lbls/sum(lbls)*100)
+lbls2 <- paste(annota, " ", pct, "%", sep="")
+pie(lbls, labels=lbls2, edges=100, radius=0.5, lty="blank", cex=1, col=rainbow(length(lbls2)), clockwise=FALSE, main="E2F1 genomic annotation")
+dev.off()
+
+#Histograms
+tiff(filename="hLCL_EBNA2_histograms4000.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL_EBNA2_b <- read.csv(file="Z:/Bioinformatics/Yonggang/geodata/Combined-ebna2/hLCL_EBNA2_R&ggplot2/ebna2_histograms4000.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(lty=1, lwd=2)
+par(col="black", pin=c(3,3))
+plot(LCL_EBNA2_b, type="l",col="blue", bty="o",main="EBNA2", xlab="Distance from center", ylab="ChIP coverage", cex.lab=1.2)
+library(Hmisc)
+minor.tick(nx=2, ny=2,tick.ratio = 0.5)
+par(opar)
+dev.off()
+
+#Go analysis
+tiff(filename="hLCL1_2_go_analysis.tif", width=12, height=8, units="in", compression = "lzw", res=600)
+LCL1_2c <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-2/hLCL1_2_R&ggplot2/hLCL1_2_go_analysis.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(pin=c(3,3), cex=0.5, mai=c(1,6.5,1,0.5))
+barplot(LCL1_2c$X.ln.P., width=1, border=NULL, cex.names=2,cex.lab=1, ylim=c(0,20), xlim=c(0,300), names.arg=LCL1_2c$GO.ID, xlab="-ln(P)", main="E2F1 Go Analysis",col=rainbow(20), las=2, horiz=TRUE)
+library(Hmisc)
+minor.tick(nx=2, ny=NULL, tick.ratio = 0.5)
+dev.off()
+
+#draw.pairwise.venn hLCL1_1and2
+tiff(filename="hLCL1_1&2_venndiagram.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+library(VennDiagram)
+vennplot <- draw.pairwise.venn(41466,60792,32382,c("E2F1","E2F6"),
+                               col="transparent", fill=c("skyblue2","salmon1"),
+                               lty="blank",cex=2,cat.cex=2,cat.pos=c(320,150))
+grid.draw(vennplot)
+grid.newpage()
+
+
+#Motif Histograms
+tiff(filename="hLCL1_2_motifshistograms.tif", width=6, height=6, units="in", compression = "lzw", res=600)
+LCL1_2d <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-2/hLCL1_2_R&ggplot2/knownmotif14568_output.csv", header=TRUE)
+library(ggplot2)
+library(reshape2)
+motifs <- melt(LCL1_2d, id.vars="Distance.from.Center")
+hLCL12motif <- ggplot(motifs, aes(x=Distance.from.Center,y=value,group=variable,colour=variable))+geom_line(linetype="solid",size=1)+scale_x_continuous(limits=c(-500,500),breaks=seq(-500,500,250))
+hLCL12motif+theme_bw()+theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
+                             axis.title.x=element_text(face="bold",size=15,margin=margin(10,0,0,0)),axis.title.y=element_text(face="bold",size=15,margin=margin(0,10,0,0)),
+                             axis.text.x=element_text(size=12),axis.text.y=element_text(size=12),
+                             legend.title=element_blank(),legend.text=element_text(size=12),
+                             legend.key=element_blank(),legend.position=c(0.88,0.86))+ggtitle("E2F1 binding Moifs")+xlab("Distance from Peak")+ylab("Sites per bp per peak")
+dev.off()
+
+##

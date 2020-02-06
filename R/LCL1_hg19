@@ -1,0 +1,572 @@
+#LCL1_hg19
+
+setwd("E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19")
+
+#hLCL1-1.....................................................................................................
+
+par(mfrow=c(2,2))
+
+#Genomic annotation
+tiff(filename="hLCL1_1_genomic_annotation.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_1a <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-1/hLCL1_1_R&ggplot2/hLCL1_1_genomic_annotation.csv", header=TRUE)
+annota <- LCL1_1a$hLCL1_1_Annotation
+lbls   <- LCL1_1a$Number.of.peaks
+pct <- round(lbls/sum(lbls)*100)
+lbls2 <- paste(annota, " ", pct, "%", sep="")
+pie(lbls, labels=lbls2, edges=100, radius=0.5, lty="blank", cex=1, col=rainbow(length(lbls2)), clockwise=FALSE, main="E2F6 genomic annotation")
+dev.off()
+
+library(plotrix) #ÉÈÐÎÍ¼
+fan.plot(lbls, labels=lbls2, max.span=3.2, edges=200, radius=1, align.at=2, cex=1, col=rainbow(length(lbls2)), main="E2F6 genomic annotation")
+dev.off()
+
+#Histograms
+tiff(filename="hLCL1_1_histograms4000.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_1b <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-1/hLCL1_1_R&ggplot2/hLCL1_1_histograms4000.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(lty=1, lwd=2)
+par(col="black", pin=c(3,3))
+plot(LCL1_1b, type="l",col="blue", bty="o",main="E2F6", xlab="Distance from center", ylab="ChIP coverage", cex.lab=1.2)
+library(Hmisc)
+minor.tick(nx=2, ny=2,tick.ratio = 0.5)
+par(opar)
+dev.off()
+
+#Go analysis
+tiff(filename="hLCL1_1_go_analysis.tif", width=12, height=8, units="in", compression = "lzw", res=600)
+LCL1_1c <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-1/hLCL1_1_R&ggplot2/hLCL1_1_go_analysis.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(pin=c(3,3), cex.axis=0.5, mai=c(1,6,1,1))
+barplot(LCL1_1c$X.ln.P., width=1, border=NULL,cex.names=1,cex.lab=1,ylim=c(0,20), xlim=c(0,300),names.arg=LCL1_1c$hLCL1_1_GO.ID, xlab="-ln(P)", main="E2F6 Go Analysis",col=rainbow(20), las=2, horiz=TRUE)
+library(Hmisc)
+minor.tick(nx=2, ny=NULL, tick.ratio = 0.5)
+par(opar)
+dev.off()
+
+#Motif Histograms
+tiff(filename="hLCL1_1_motifshistograms.tif", width=6, height=6, units="in", compression = "lzw", res=600)
+LCL1_1d <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-1/hLCL1_1_R&ggplot2/knownmotif1345_output.csv", header=TRUE)
+library(ggplot2)
+library(reshape2)
+motifs <- melt(LCL1_1d, id.vars="Distance.from.Center")
+hLCL11motif <- ggplot(motifs, aes(x=Distance.from.Center,y=value,group=variable,colour=variable))+geom_line(linetype="solid",size=1)+scale_x_continuous(limits=c(-500,500),breaks=seq(-500,500,250))
+hLCL11motif+theme_bw()+theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
+                             axis.title.x=element_text(face="bold",size=15,margin=margin(10,0,0,0)),axis.title.y=element_text(face="bold",size=15,margin=margin(0,10,0,0)),
+                             axis.text.x=element_text(size=12),axis.text.y=element_text(size=12),
+                             legend.title=element_blank(),legend.text=element_text(size=12),
+                             legend.key=element_blank(),legend.position=c(0.88,0.88))+ggtitle("E2F6 binding Moifs")+xlab("Distance from Peak")+ylab("Sites per bp per peak")
+dev.off()
+
+#SuperEnhancer analysis
+tiff(filename="hLCL1_1_superenhancer.tif", width=6, height=8, units="in", compression = "lzw", res=600)
+LCL1_1_SE <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-1/hLCL1_1_R&ggplot2/hLCL1_1_superenhancer.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(lty=1, lwd=2)
+par(col="black", pin=c(3,3))
+plot(LCL1_1_SE$Normalized.Tag.Count, type="l",col="blue", bty="o",ylim=c(0,260000),main="E2F6 super-enhancer in LCL1", ylab="E2F6 signal", cex.lab=1.2)
+library(Hmisc)
+minor.tick(nx=2, ny=2,tick.ratio=0.5)
+par(opar)
+dev.off()
+
+tiff(filename="hLCL1_1_super and typical enhancer.tif", width=3, height=6, units="in", compression = "lzw", res=600)
+LCL1_1_SE_TE <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-1/hLCL1_1_R&ggplot2/hLCL1_1_SE_TE.csv", header=TRUE)
+boxplot(LCL1_1_SE_TE,names=c("SE","TE"),ylim=c(0,8000), col="red",
+        main="SE and TE for hLCL1_1 in LCL1", ylab="ChIP-seq density")
+dev.off()
+
+#hLCL1-2.....................................................................................................
+
+par(mfrow=c(2,2))
+
+#Genomic annotation
+tiff(filename="hLCL1_2_genomic_annotation.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_2a <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-2/hLCL1_2_R&ggplot2/hLCL1_2_genomic_annotation.csv", header=TRUE)
+annota <- LCL1_2a$Annotation
+lbls   <- LCL1_2a$Number.of.peaks
+pct <- round(lbls/sum(lbls)*100)
+lbls2 <- paste(annota, " ", pct, "%", sep="")
+pie(lbls, labels=lbls2, edges=100, radius=0.5, lty="blank", cex=1, col=rainbow(length(lbls2)), clockwise=FALSE, main="E2F1 genomic annotation")
+dev.off()
+
+#Histograms
+tiff(filename="hLCL1_2_histograms4000.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_2b <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-2/hLCL1_2_R&ggplot2/hLCL1_2_histograms4000.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(lty=1, lwd=2)
+par(col="black", pin=c(3,3))
+plot(LCL1_2b, type="l",col="blue", bty="o",main="E2F1", xlab="Distance from center", ylab="ChIP coverage", cex.lab=1.2)
+library(Hmisc)
+minor.tick(nx=2, ny=2,tick.ratio = 0.5)
+par(opar)
+dev.off()
+
+#Go analysis
+tiff(filename="hLCL1_2_go_analysis.tif", width=12, height=8, units="in", compression = "lzw", res=600)
+LCL1_2c <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-2/hLCL1_2_R&ggplot2/hLCL1_2_go_analysis.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(pin=c(3,3), cex=0.5, mai=c(1,6.5,1,0.5))
+barplot(LCL1_2c$X.ln.P., width=1, border=NULL, cex.names=2,cex.lab=1, ylim=c(0,20), xlim=c(0,300), names.arg=LCL1_2c$GO.ID, xlab="-ln(P)", main="E2F1 Go Analysis",col=rainbow(20), las=2, horiz=TRUE)
+library(Hmisc)
+minor.tick(nx=2, ny=NULL, tick.ratio = 0.5)
+dev.off()
+
+#draw.pairwise.venn hLCL1_1and2
+tiff(filename="hLCL1_1&2_venndiagram.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+library(VennDiagram)
+vennplot <- draw.pairwise.venn(41466,60792,32382,c("E2F1","E2F6"),
+                               col="transparent", fill=c("skyblue2","salmon1"),
+                               lty="blank",cex=2,cat.cex=2,cat.pos=c(320,150))
+grid.draw(vennplot)
+grid.newpage()
+
+
+#Motif Histograms
+tiff(filename="hLCL1_2_motifshistograms.tif", width=6, height=6, units="in", compression = "lzw", res=600)
+LCL1_2d <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-2/hLCL1_2_R&ggplot2/knownmotif14568_output.csv", header=TRUE)
+library(ggplot2)
+library(reshape2)
+motifs <- melt(LCL1_2d, id.vars="Distance.from.Center")
+hLCL12motif <- ggplot(motifs, aes(x=Distance.from.Center,y=value,group=variable,colour=variable))+geom_line(linetype="solid",size=1)+scale_x_continuous(limits=c(-500,500),breaks=seq(-500,500,250))
+hLCL12motif+theme_bw()+theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
+                             axis.title.x=element_text(face="bold",size=15,margin=margin(10,0,0,0)),axis.title.y=element_text(face="bold",size=15,margin=margin(0,10,0,0)),
+                             axis.text.x=element_text(size=12),axis.text.y=element_text(size=12),
+                             legend.title=element_blank(),legend.text=element_text(size=12),
+                             legend.key=element_blank(),legend.position=c(0.88,0.86))+ggtitle("E2F1 binding Moifs")+xlab("Distance from Peak")+ylab("Sites per bp per peak")
+dev.off()
+
+#SuperEnhancer analysis
+tiff(filename="hLCL1_2_superenhancer.tif", width=6, height=8, units="in", compression = "lzw", res=600)
+LCL1_2SE <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-2/hLCL1_2_R&ggplot2/hLCL1_2_superenhancer.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(lty=1, lwd=2)
+par(col="black", pin=c(3,3))
+plot(LCL1_2SE$Normalized.Tag.Count, type="l",col="blue", bty="o",ylim=c(0,200000),main="E2F1 super-enhancer in LCL1", ylab="E2F1 signal", cex.lab=1.2)
+library(Hmisc)
+minor.tick(nx=2, ny=2,tick.ratio=0.5)
+par(opar)
+dev.off()
+
+tiff(filename="hLCL1_2_super and typical enhancer.tif", width=3, height=6, units="in", compression = "lzw", res=600)
+LCL1_2_SE_TE <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-2/hLCL1_2_R&ggplot2/hLCL1_2_SE_TE.csv", header=TRUE)
+boxplot(LCL1_2_SE_TE,names=c("SE","TE"),ylim=c(0,9000), col="red",
+        main="SE and TE for hLCL1_2 in LCL1", ylab="ChIP-seq density")
+dev.off()
+
+
+#hLCL1-3.....................................................................................................
+
+par(mfrow=c(2,2))
+
+#Genomic annotation
+tiff(filename="hLCL1_3_genomic_annotation.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_3a <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-3/hLCL1_3_R&ggplot2/hLCL1_3_genomic_annotation.csv", header=TRUE)
+annota <- LCL1_3a$Annotation
+lbls   <- LCL1_3a$Number.of.peaks
+pct <- round(lbls/sum(lbls)*100)
+lbls2 <- paste(annota, " ", pct, "%", sep="")
+pie(lbls, labels=lbls2, edges=100, radius=0.8, lty="blank", cex=1, col=rainbow(length(lbls2)), clockwise=FALSE, main="Rb genomic annotation")
+dev.off()
+
+#Histograms
+tiff(filename="hLCL1_3_histograms4000.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_3b <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-3/hLCL1_3_R&ggplot2/hLCL1_3_histograms4000.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(lty=1, lwd=2)
+par(col="black", pin=c(3,3))
+plot(LCL1_3b, type="l",col="blue", bty="o",main="Rb", xlab="Distance from center", ylab="ChIP coverage", cex.lab=1.2)
+library(Hmisc)
+minor.tick(nx=2, ny=2,tick.ratio = 0.5)
+par(opar)
+dev.off()
+
+#Go analysis
+tiff(filename="hLCL1_3_go_analysis.tif", width=12, height=8, units="in", compression = "lzw", res=600)
+LCL1_3c <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-3/hLCL1_3_R&ggplot2/hLCL1_3_go_analysis.csv", header=TRUE)
+goanalysis <- LCL1_3c$GO.ID
+opar <- par(no.readonly = TRUE)
+par(pin=c(3,3), cex=0.5, mai=c(1,6.5,1,0.5))
+barplot(LCL1_3c$X.ln.P., width=1, cex.names=2,cex.lab=1,border=NULL, ylim=c(0,20), xlim=c(0,300), names.arg=goanalysis, xlab="-ln(P)", main="Rb Go Analysis",col=rainbow(20), las=2, horiz=TRUE)
+par(opar)
+dev.off()
+
+
+#Motif Histograms
+tiff(filename="hLCL1_3_motifshistograms.tif", width=6, height=6, units="in", compression = "lzw", res=600)
+LCL1_3d <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-3/hLCL1_3_R&ggplot2/knownmotif123467_output.csv", header=TRUE)
+library(ggplot2)
+library(reshape2)
+motifs <- melt(LCL1_3d, id.vars="Distance.from.Center")
+hLCL13motif <- ggplot(motifs, aes(x=Distance.from.Center,y=value,group=variable,colour=variable))+geom_line(linetype="solid",size=1)+scale_x_continuous(limits=c(-500,500),breaks=seq(-500,500,250))
+hLCL13motif+theme_bw()+theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
+                             axis.title.x=element_text(face="bold",size=15,margin=margin(10,0,0,0)),axis.title.y=element_text(face="bold",size=15,margin=margin(0,10,0,0)),
+                             axis.text.x=element_text(size=12),axis.text.y=element_text(size=12),
+                             legend.title=element_blank(),legend.text=element_text(size=12),
+                             legend.key=element_blank(),legend.position=c(0.88,0.80))+ggtitle("Rb binding Moifs")+xlab("Distance from Peak")+ylab("Sites per bp per peak")
+dev.off()
+
+#SuperEnhancer analysis
+tiff(filename="hLCL1_3_superenhancer.tif", width=6, height=8, units="in", compression = "lzw", res=600)
+LCL1_3SE <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-3/hLCL1_3_R&ggplot2/hLCL1_3_superenhancer.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(lty=1, lwd=2)
+par(col="black", pin=c(3,3))
+plot(LCL1_3SE$Normalized.Tag.Count, type="l",col="blue", bty="o",ylim=c(0,200000),main="Rb super-enhancer in LCL1", ylab="Rb signal", cex.lab=1.2)
+library(Hmisc)
+minor.tick(nx=2, ny=2,tick.ratio=0.5)
+par(opar)
+dev.off()
+
+tiff(filename="hLCL1_3_super and typical enhancer.tif", width=3, height=6, units="in", compression = "lzw", res=600)
+LCL1_3_SE_TE <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-3/hLCL1_3_R&ggplot2/hLCL1_3_SE_TE.csv", header=TRUE)
+boxplot(LCL1_3_SE_TE,names=c("SE","TE"),ylim=c(0,9000), col="red",
+        main="SE and TE for hLCL1_3 in LCL1", ylab="ChIP-seq density")
+dev.off()
+
+
+
+#hLCL1-4.....................................................................................................
+
+par(mfrow=c(2,2))
+
+#Genomic annotation
+tiff(filename="hLCL1_4_genomic_annotation.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_4a <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-4/hLCL1_4_R&ggplot2/hLCL1_4_genomic_annotation.csv", header=TRUE)
+annota <- LCL1_4a$Annotation
+lbls   <- LCL1_4a$Number.of.peaks
+pct <- round(lbls/sum(lbls)*100)
+lbls2 <- paste(annota, " ", pct, "%", sep="")
+pie(lbls, labels=lbls2, edges=100, radius=0.8, lty="blank", cex=1, col=rainbow(length(lbls2)), clockwise=FALSE, main="HDAC1 genomic annotation")
+dev.off()
+
+#Histograms
+tiff(filename="hLCL1_4_histograms4000.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_4b <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-4/hLCL1_4_R&ggplot2/hLCL1_4_histograms4000.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(lty=1, lwd=2)
+par(col="black", pin=c(3,3))
+plot(LCL1_4b, type="l",col="blue", bty="o",main="HDAC1", xlab="Distance from center", ylab="ChIP coverage", cex.lab=1.2)
+library(Hmisc)
+minor.tick(nx=2, ny=2,tick.ratio = 0.5)
+par(opar)
+dev.off()
+
+#Go analysis
+tiff(filename="hLCL1_4_go_analysis.tif", width=12, height=8, units="in", compression = "lzw", res=600)
+LCL1_4c <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-4/hLCL1_4_R&ggplot2/hLCL1_4_go_analysis.csv", header=TRUE)
+goanalysis <- LCL1_4c$GO.ID
+opar <- par(no.readonly = TRUE)
+par(pin=c(3,3), cex=0.5,  mai=c(1,6.5,1,0.5))
+barplot(LCL1_4c$X.ln.P., width=1, cex.names=2, cex.lab=1,border=NULL, ylim=c(0,20), xlim=c(0,300), names.arg=goanalysis, xlab="-ln(P)", col=rainbow(20), las=2, horiz=TRUE)
+library(Hmisc)
+minor.tick(nx=2, ny=NULL, tick.ratio = 0.5)
+par(opar)
+dev.off()
+
+#Motif Histograms
+tiff(filename="hLCL1_4_motifshistograms.tif", width=6, height=6, units="in", compression = "lzw", res=600)
+LCL1_4d <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-4/hLCL1_4_R&ggplot2/knownmotif123567_output.csv", header=TRUE)
+library(ggplot2)
+library(reshape2)
+motifs <- melt(LCL1_4d, id.vars="Distance.from.Center")
+hLCL14motif <- ggplot(motifs, aes(x=Distance.from.Center,y=value,group=variable,colour=variable))+geom_line(linetype="solid",size=1)+scale_x_continuous(limits=c(-500,500),breaks=seq(-500,500,250))
+hLCL14motif+theme_bw()+theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
+                             axis.title.x=element_text(face="bold",size=15,margin=margin(10,0,0,0)),axis.title.y=element_text(face="bold",size=15,margin=margin(0,10,0,0)),
+                             axis.text.x=element_text(size=12),axis.text.y=element_text(size=12),
+                             legend.title=element_blank(),legend.text=element_text(size=12),
+                             legend.key=element_blank(),legend.position=c(0.88,0.82))+ggtitle("HDAC1 binding Moifs")+xlab("Distance from Peak")+ylab("Sites per bp per peak")
+dev.off()
+
+#SuperEnhancer analysis
+tiff(filename="hLCL1_4_superenhancer.tif", width=6, height=8, units="in", compression = "lzw", res=600)
+LCL1_4SE <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-4/hLCL1_4_R&ggplot2/hLCL1_4_superenhacer.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(lty=1, lwd=2)
+par(col="black", pin=c(3,3))
+plot(LCL1_4SE$Normalized.Tag.Count, type="l",col="blue", bty="o",ylim=c(0,200000),main="HDAC1 super-enhancer in LCL1", ylab="HDAC1 signal", cex.lab=1.2)
+library(Hmisc)
+minor.tick(nx=2, ny=2,tick.ratio=0.5)
+par(opar)
+dev.off()
+
+tiff(filename="hLCL1_4_super and typical enhancer.tif", width=3, height=6, units="in", compression = "lzw", res=600)
+LCL1_4_SE_TE <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-4/hLCL1_4_R&ggplot2/hLCL1_4_SE_TE.csv", header=TRUE)
+boxplot(LCL1_4_SE_TE,names=c("SE","TE"),ylim=c(0,9000), col="red",
+        main="SE and TE for hLCL1_4 in LCL1", ylab="ChIP-seq density")
+dev.off()
+
+
+#hLCL1-5....................................................................................................
+
+par(mfrow=c(2,2))
+
+#Genomic annotation
+tiff(filename="hLCL1_5_genomic_annotation.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_5a <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-5/hLCL1_5_R&ggplot2/hLCL1_5_genomic_annotation.csv", header=TRUE)
+annota <- LCL1_5a$Annotation
+lbls   <- LCL1_5a$Number.of.peaks
+pct <- round(lbls/sum(lbls)*100)
+lbls2 <- paste(annota, " ", pct, "%", sep="")
+pie(lbls, labels=lbls2, edges=100, radius=0.8,lty="blank", cex=1, col=rainbow(length(lbls2)), clockwise=FALSE, main="HDAC2 genomic annotation")
+dev.off()
+
+#Histograms
+tiff(filename="hLCL1_5_histograms4000.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_5b <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-5/hLCL1_5_R&ggplot2/hLCL1_5_histograms4000.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(lty=1, lwd=2)
+par(col="black", pin=c(3,3))
+plot(LCL1_5b, type="l",col="blue", bty="o",main="HDAC2", xlab="Distance from center", ylab="ChIP coverage", cex.lab=1.2)
+library(Hmisc)
+minor.tick(nx=2, ny=2,tick.ratio = 0.5)
+par(opar)
+dev.off()
+
+#Go analysis
+tiff(filename="hLCL1_5_go_analysis.tif", width=12, height=8, units="in", compression = "lzw", res=600)
+LCL1_5c <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-5/hLCL1_5_R&ggplot2/hLCL1_5_go_analysis.csv", header=TRUE)
+goanalysis <- LCL1_5c$GO.ID
+opar <- par(no.readonly = TRUE)
+par(pin=c(3,3), cex=0.5,mai=c(1,7,1,0.5))
+barplot(LCL1_5c$X.ln.P., width=1, cex.names=2, cex.lab=1,border=NULL, ylim=c(0,20), xlim=c(0,200), names.arg=goanalysis, xlab="-ln(P)", main="HDAC2 Go Analysis",col=rainbow(20), las=2, horiz=TRUE)
+library(Hmisc)
+minor.tick(nx=2, ny=NULL, tick.ratio = 0.5)
+par(opar)
+dev.off()
+
+#draw.pairwise.venn hLCL1_4and5
+tiff(filename="hLCL1_4&5_venndiagram.tif", width=10, height=10, units="in", compression = "lzw", res=600)
+library(VennDiagram)
+vennplot <- draw.pairwise.venn(38926,258292,36433,c("HDAC1","HDAC2"),
+                               col="transparent", fill=c("skyblue2","salmon1"),
+                               lty="blank",cex=2,cat.cex=2,cat.pos=c(300,150))
+grid.draw(vennplot)
+dev.off()
+
+
+.....................................................................................................
+#draw.pairwise.venn hLCL1_1and2and3and4and5
+tiff(filename="hLCL1_1&2&3&4&5_venndiagram.tif", width=10, height=12, units="in", compression = "lzw", res=1200)
+library(GenomicRanges)
+library(rtracklayer)
+library(ChIPpeakAnno)
+LCL1_1d <- import("E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-1/hLCL1_1_R&ggplot2/hLCL1_1peaks.bed",
+                  format="BED")
+LCL1_2d <- import("E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-2/hLCL1_2_R&ggplot2/hLCL1_2peaks.bed",
+                  format="BED")
+LCL1_3d <- import("E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-3/hLCL1_3_R&ggplot2/hLCL1_3peaks.bed",
+                  format="BED")
+LCL1_4d <- import("E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-4/hLCL1_4_R&ggplot2/hLCL1_4peaks.bed",
+                  format="BED")
+LCL1_5d <- import("E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-5/hLCL1_5_R&ggplot2/hLCL1_5peaks.bed",
+                  format="BED")
+names(LCL1_1d) <- paste(c(1:60793),seq="")
+names(LCL1_2d) <- paste(c(1:41466),seq="")
+names(LCL1_3d) <- paste(c(1:32045),seq="")
+names(LCL1_4d) <- paste(c(1:38926),seq="")
+names(LCL1_5d) <- paste(c(1:260070),seq="")
+overlap <- findOverlapsOfPeaks(LCL1_1d,LCL1_2d,LCL1_3d,LCL1_4d,LCL1_5d,maxgap=1000,connectedPeaks="min")
+peaklist <- overlap$peaklist
+
+#########################################
+makeVennDiagram(overlap,totalTest=100,lty="blank",cex=1,cat.cex=1.2,main="Overlap of four TFs",
+                category = c("E2F6", "E2F1", "Rb", "HDAC1", "HDAC2"),margin = 0.1,
+                fill = c("dodgerblue", "goldenrod1", "darkorange1", "seagreen3", "orchid3"))
+pie(table(overlap$overlappingPeaks[["LCL1_1d///LCL1_2d"]]$overlapFeature))
+pie(table(overlap$overlappingPeaks[["LCL1_4d///LCL1_5d"]]$overlapFeature))
+#########################################
+
+features <- overlap$peaklist[[length(overlap$peaklist)]]
+wid <- width(features)
+feature.recentered <- feature.center <- features
+start(feature.center) <- start(features) + floor(wid/2)
+width(feature.center) <- 1
+start(feature.recentered) <- start(feature.center) - 2000
+end(feature.recentered) <- end(feature.center) + 2000
+
+## compare rtracklayer, it will save you time when handle huge dataset.
+library(rtracklayer)
+tiff(filename="hLCL1_1&2&3&4&5_venndiagram.tif", width=5, height=10, units="in", compression = "lzw", res=600)
+path1 <- "E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-1/hLCL1_1_R&ggplot2/hLCL1_1.bigwig"
+files1 <- import.bw(path1,format="bigWig",as="RleList")
+sig1 <- featureAlignedSignal(files1, feature.center,upstream=2000, downstream=2000)
+heatmap <- featureAlignedHeatmap(sig1, feature.center,upstream=2000, downstream=2000,upper.extreme=c(3,.5,4))
+
+path2 <- "E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-2/hLCL1_2_R&ggplot2/hLCL1_2.bigwig"
+files2 <- import.bw(path2,format="bigWig",as="RleList")
+sig2 <- featureAlignedSignal(files2, feature.center,upstream=2000, downstream=2000)
+heatmap <- featureAlignedHeatmap(sig2, feature.center,upstream=2000, downstream=2000,upper.extreme=c(3,.5,4))
+
+path3 <- "E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-3/hLCL1_3_R&ggplot2/hLCL1_3.bigwig"
+files3 <- import.bw(path3,format="bigWig",as="RleList")
+sig3 <- featureAlignedSignal(files3, feature.center,upstream=2000, downstream=2000)
+heatmap <- featureAlignedHeatmap(sig3, feature.center,upstream=2000, downstream=2000,upper.extreme=c(3,.5,4))
+
+path4 <- "E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-4/hLCL1_4_R&ggplot2/hLCL1_4.bigwig"
+files4 <- import.bw(path4,format="bigWig",as="RleList")
+sig4 <- featureAlignedSignal(files4, feature.center,upstream=2000, downstream=2000)
+heatmap <- featureAlignedHeatmap(sig4, feature.center,upstream=2000, downstream=2000,upper.extreme=c(3,.5,4))
+
+path5 <- "E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-5/hLCL1_5_R&ggplot2/hLCL1_5.bigwig"
+files5 <- import.bw(path5,format="bigWig",as="RleList")
+sig5 <- featureAlignedSignal(files5, feature.center,upstream=2000, downstream=2000)
+heatmap <- featureAlignedHeatmap(sig5, feature.center,upstream=2000, downstream=2000,upper.extreme=c(3,.5,4))
+.....................................................................................................
+
+#Motif Histograms
+tiff(filename="hLCL1_5_motifshistograms.tif", width=6, height=6, units="in", compression = "lzw", res=600)
+LCL1_5d <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-5/hLCL1_5_R&ggplot2/knownmotif12347891011121415161718_output.csv", header=TRUE)
+library(ggplot2)
+library(reshape2)
+motifs <- melt(LCL1_5d, id.vars="Distance.from.Center")
+hLCL11motif <- ggplot(motifs, aes(x=Distance.from.Center,y=value,group=variable,colour=variable))+geom_line(linetype="solid",size=1)+scale_x_continuous(limits=c(-500,500),breaks=seq(-500,500,250))
+hLCL11motif+theme_bw()+theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
+                             axis.title.x=element_text(face="bold",size=15,margin=margin(10,0,0,0)),axis.title.y=element_text(face="bold",size=15,margin=margin(0,10,0,0)),
+                             axis.text.x=element_text(size=12),axis.text.y=element_text(size=12),
+                             legend.title=element_blank(),legend.text=element_text(size=12),
+                             legend.key=element_blank(),legend.position=c(0.88,0.60))+ggtitle("HDAC2 binding Moifs")+xlab("Distance from Peak")+ylab("Sites per bp per peak")
+dev.off()
+
+#SuperEnhancer analysis
+tiff(filename="hLCL1_5_superenhancer.tif", width=6, height=6, units="in", compression = "lzw", res=600)
+LCL1_5SE <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-5/hLCL1_5_R&ggplot2/hLCL1_5_superenhancer.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(lty=1, lwd=2)
+par(col="black", pin=c(3,3))
+plot(LCL1_5SE$Normalized.Tag.Count, type="l",col="blue", bty="o",ylim=c(0,250000),main="HDAC2 super-enhancer in LCL1", ylab="HDAC2 signal", cex.lab=1.2)
+library(Hmisc)
+minor.tick(nx=2, ny=2,tick.ratio = 0.5)
+par(opar)
+dev.off()
+
+tiff(filename="hLCL1_5_super and typical enhancer.tif", width=3, height=6, units="in", compression = "lzw", res=600)
+LCL1_5_SE_TE <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-4/hLCL1_4_R&ggplot2/hLCL1_4_SE_TE.csv", header=TRUE)
+boxplot(LCL1_5_SE_TE,names=c("SE","TE"),ylim=c(0,9000), col="red",
+        main="SE and TE for hLCL1_5 in LCL1", ylab="ChIP-seq density")
+dev.off()
+
+
+#hLCL1-1-12-6.....................................................................................................
+
+#Genomic annotation
+tiff(filename="hLCL1_1_126_genomic_annotation.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_1_126a <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/hLCL1-1-12-6/hLCL1_1_126_R&ggplot2/hLCL1_1_126_genomic_annotation.csv", header=TRUE)
+annota <- LCL1_1_126a$hLCL1.1.12.6.Annotation
+lbls   <- LCL1_1_126a$Number.of.peaks
+pct <- round(lbls/sum(lbls)*100)
+lbls2 <- paste(annota, " ", pct, "%", sep="")
+pie(lbls, labels=lbls2, edges=100, radius=0.8, lty="blank", cex=1, col=rainbow(length(lbls2)), clockwise=FALSE, main="IRF4 genomic annotation")
+dev.off()
+
+#Histograms
+tiff(filename="hLCL1_1_126_histograms.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_1_126b <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/hLCL1-1-12-6/hLCL1_1_126_R&ggplot2/hLCL1_1_126_histograms.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(lty=1, lwd=2)
+par(col="black", pin=c(3,3))
+plot(LCL1_1_126b, type="l",col="blue", bty="o",main="IRF4", xlab="Distance from center", ylab="ChIP coverage", cex.lab=1.2)
+library(Hmisc)
+minor.tick(nx=2, ny=2,tick.ratio = 0.5)
+par(opar)
+dev.off()
+
+#Go analysis
+tiff(filename="hLCL1_1_126_go_analysis.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_1_126c <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/hLCL1-1-12-6/hLCL1_1_126_R&ggplot2/hLCL1_1_126_goanalysis.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(pin=c(3,3), cex.axis=0.5, mai=c(2,4,1,1))
+barplot(LCL1_1_126c$X.ln.P., width=1, border=NULL, ylim=c(0,20), xlim=c(0,50),names.arg=LCL1_1_126c$hLCL1_1_12_6.go.analysis, xlab="-ln(P)", main="IRF4 Go Analysis",col=rainbow(20), las=2, horiz=TRUE)
+library(Hmisc)
+minor.tick(nx=2, ny=NULL, tick.ratio = 0.5)
+dev.off()
+
+
+#hLCL1-2-12-6.....................................................................................................
+
+#Genomic annotation
+tiff(filename="hLCL1_2_126_genomic_annotation.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_2_126a <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/hLCL1-2-12-6/hLCL1_2_126_R&ggplot2/hLCL1_2_126_genomic_annotation.csv", header=TRUE)
+annota <- LCL1_2_126a$Annotation
+lbls   <- LCL1_2_126a$Number.of.peaks
+pct <- round(lbls/sum(lbls)*100)
+lbls2 <- paste(annota, " ", pct, "%", sep="")
+pie(lbls, labels=lbls2, edges=100, radius=0.8, lty="blank", cex=0.8, col=rainbow(length(lbls2)), clockwise=FALSE, main="Myc genomic annotation")
+dev.off()
+
+#Histograms
+tiff(filename="hLCL1_2_126_histograms.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_2_126b <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/hLCL1-2-12-6/hLCL1_2_126_R&ggplot2/hLCL1_2_126_histograms.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(lty=1, lwd=2)
+par(col="black", pin=c(3,3))
+plot(LCL1_2_126b, type="l",col="blue", bty="o",main="Myc", xlab="Distance from center", ylab="ChIP coverage", cex.lab=1.2)
+library(Hmisc)
+minor.tick(nx=2, ny=2,tick.ratio = 0.5)
+par(opar)
+dev.off()
+
+#Go analysis
+tiff(filename="hLCL1_2_126_go_analysis.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_2_126c <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/hLCL1-2-12-6/hLCL1_2_126_R&ggplot2/hLCL1_2_126_goanalysis.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(pin=c(3,3), cex.axis=0.5, mai=c(2,4,1,1))
+barplot(LCL1_2_126c$X.ln.P., width=1, border=NULL, ylim=c(0,20), xlim=c(0,50),names.arg=LCL1_2_126c$hLCL1_2_126_goanalysis, xlab="-ln(P)", main="Myc Go Analysis",col=rainbow(20), las=2, horiz=TRUE)
+library(Hmisc)
+minor.tick(nx=2, ny=NULL, tick.ratio = 0.5)
+dev.off()
+
+#hLCL1-3-12-6.....................................................................................................
+
+#Genomic annotation
+tiff(filename="hLCL1_3_126_genomic_annotation.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_3_126a <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/hLCL1-3-12-6/hLCL1_3_126_R&ggplot2/hLCL1_3_126_genomic_annotation.csv", header=TRUE)
+annota <- LCL1_3_126a$Annotation
+lbls   <- LCL1_3_126a$Number.of.peaks
+pct <- round(lbls/sum(lbls)*100)
+lbls2 <- paste(annota, " ", pct, "%", sep="")
+pie(lbls, labels=lbls2, edges=100, radius=0.8, lty="blank", cex=1, col=rainbow(length(lbls2)), clockwise=FALSE, main="Bcl6 genomic annotation")
+dev.off()
+
+#Histograms
+tiff(filename="hLCL1_3_126_histograms.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_3_126b <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/hLCL1-3-12-6/hLCL1_3_126_R&ggplot2/hLCL1_3_126_histograms.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(lty=1, lwd=2)
+par(col="black", pin=c(3,3))
+plot(LCL1_3_126b, type="l",col="blue", bty="o",main="Bcl6", xlab="Distance from center", ylab="ChIP coverage", cex.lab=1.2)
+library(Hmisc)
+minor.tick(nx=2, ny=2,tick.ratio = 0.5)
+par(opar)
+dev.off()
+
+#Go analysis
+tiff(filename="hLCL1_3_126_go_analysis.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+LCL1_3_126c <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/hLCL1-3-12-6/hLCL1_3_126_R&ggplot2/hLCL1_3_126_goanalysis.csv", header=TRUE)
+opar <- par(no.readonly = TRUE)
+par(pin=c(3,3), cex.axis=0.5, mai=c(2,4,1,1))
+barplot(LCL1_3_126c$X.ln.P., width=1, border=NULL, ylim=c(0,20), xlim=c(0,50),names.arg=LCL1_3_126c$hLCL1_3_126_goanalysis, xlab="-ln(P)", main="Bcl6 Go Analysis",col=rainbow(20), las=2, horiz=TRUE)
+library(Hmisc)
+minor.tick(nx=2, ny=NULL, tick.ratio = 0.5)
+dev.off()
+
+#VennDiagram.............................................................................................................
+tiff(filename="hLCL1_1&2&3_126_venndiagram.tif", width=8, height=8, units="in", compression = "lzw", res=600)
+library(GenomicRanges)
+library(rtracklayer)
+library(ChIPpeakAnno)
+LCL1_1_126d <- import("E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/hLCL1-1-12-6/hLCL1_1_126_R&ggplot2/hLCL1_1_12_6peaks.bed",
+                  format="BED")
+LCL1_2_126d <- import("E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/hLCL1-2-12-6/hLCL1_2_126_R&ggplot2/hLCL1_2_12_6peaks.bed",
+                  format="BED")
+LCL1_3_126d <- import("E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/hLCL1-3-12-6/hLCL1_3_126_R&ggplot2/hLCL1_3_12_6peaks.bed",
+                  format="BED")
+names(LCL1_1_126d) <- paste(c(1:421),seq="")
+names(LCL1_2_126d) <- paste(c(1:754),seq="")
+names(LCL1_3_126d) <- paste(c(1:574),seq="")
+overlap <- findOverlapsOfPeaks(LCL1_1_126d,LCL1_2_126d,LCL1_3_126d,maxgap=1000)
+peaklist <- overlap$peaklist
+makeVennDiagram(overlap,totalTest=100,lty="blank",cex=1,cat.cex=1.2,main="Overlap of three TFs in LCL1",
+                category = c("IRF4", "Myc", "Bcl6"),margin = 0.1,
+                fill = c("dodgerblue", "goldenrod1", "seagreen3"))
+
+#.............................................................................................................
