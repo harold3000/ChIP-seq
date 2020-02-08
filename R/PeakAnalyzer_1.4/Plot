@@ -1,0 +1,42 @@
+#PeakAnalyzer training
+
+summary<-read.table("/home/training/Desktop/ChIP-seq/Oct4_peaks.summary.bed",fill=TRUE,header=TRUE,sep="\t")
+ods<-read.table("/home/training/Desktop/ChIP-seq/Oct4_peaks.overlap.bed",fill=TRUE,header=TRUE,sep="\t")
+total<-as.matrix(table(ods[,7]))
+overlap<-total/length(ods[,7])*100
+geneStructure<-NULL
+structure<-matrix(data=0,nrow=7,ncol=1)
+row.names(structure)<-c("3'UTR","LastIntron","5'UTR","Exons","Intergenic","FirstIntron","OtherIntrons")
+x<-overlap
+if(length(grep("Intron1",rownames(x))) >0){structure["FirstIntron",]<-x[grep("Intron1$",rownames(x)),]}
+if(length(grep("LastIntron",rownames(x))) >0){structure["LastIntron",]<-x[grep("LastIntron",rownames(x)),]}
+if(length(grep("Intergenic",rownames(x))) >0) {structure["Intergenic",]<-x[grep("Intergenic",rownames(x)),]}
+if(length(grep("UTR3",rownames(x))) >0){structure["3'UTR",]<-x[grep("UTR3",rownames(x)),]}
+if(length(grep("UTR5",rownames(x))) >0){structure["5'UTR",]<-x[grep("UTR5",rownames(x)),]}
+exons<-sum(x[grep("Exon",rownames(x)),])
+if(length(grep("Exon",rownames(x))) >0){structure["Exons",]<-exons}
+ontherIntons<-sum(x[setdiff(seq(length(rownames(x))),grep("Intron1$|LastIntron|UTR|Intergenic|Exon",rownames(x)))])
+structure["OtherIntrons",]<-ontherIntons
+yHeight<-ceiling( (max(structure))/10)
+profile <- array(0, dim=c(6,1), dimnames=list(c("0-1kb","1-3kb","3-5kb","5-10kb","10-100kb",">100kb"), "seq"))
+distance<-summary$Distance
+distance<-na.omit(distance)
+profile["0-1kb",1]<-length(distance[distance<=1000 & distance>=0])/length(distance)*100
+profile["1-3kb",1]<-length(distance[distance<=3000 & distance>1000])/length(distance)*100
+profile["3-5kb",1]<-length(distance[distance<=5000 & distance>3000])/length(distance)*100
+profile["5-10kb",1]<-length(distance[distance<=10000 & distance>5000])/length(distance)*100
+profile["10-100kb",1]<-length(distance[distance<=100000 & distance>10000])/length(distance)*100
+profile[">100kb",1]<-length(distance[abs(distance)>100000])/length(distance)*100
+colScheme <- c("#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C", "#FB9A99", "#E31A1C", "#FDBF6F")
+outFile<-"/home/training/Desktop/ChIP-seq/Oct4_peaks.bed.ndg.pdf"
+pdf(file=outFile,height=7)
+par(mar=c(5, 4, 3, 1),mfrow=c(2,1),xpd=TRUE)
+colors<-c(rgb(1,1,1),rgb(0.8,0.993,1),rgb(0.6,0.973,1),rgb(0.4,0.94,1),rgb(0.2,0.893,1),rgb(0,0.667,0.8),rgb(0,0.48,0.6))
+labels<-format (structure,digits=1)
+pie(structure,label=labels,col=colors,radius=1,cex=0.8,main="% Peaks overlapping gene features",cex.main=0.8)
+legend(x=-3.1,y=0.82,row.names(structure),fill=colors,cex=0.8)
+colors<-c(rgb(1,1,0.8),rgb(1,0.933,0.6),rgb(1,0.8,0.4),rgb(1,0.6,0.2),rgb(1,0.4,0.1),rgb(1,0.167,0))
+barplot(profile,col=rev(colors),beside=TRUE,names.arg=row.names(profile),ylab="Binding Sites(%)",las=2,main="Distance to nearest downstream gene",cex.main=0.8,cex.axis=0.8)
+dev.off()
+
+##
