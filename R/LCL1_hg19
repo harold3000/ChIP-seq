@@ -440,7 +440,7 @@ par(opar)
 dev.off()
 
 tiff(filename="hLCL1_5_super and typical enhancer.tif", width=3, height=6, units="in", compression = "lzw", res=600)
-LCL1_5_SE_TE <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-4/hLCL1_4_R&ggplot2/hLCL1_4_SE_TE.csv", header=TRUE)
+LCL1_5_SE_TE <- read.csv(file="E:/ÃÎÖ®·ÉÏè/Projects/0 ChIP-seq/Homer analysis/LCL1-hg19/Combined-hLCL1-5/hLCL1_5_R&ggplot2/hLCL1_5_SE_TE.csv", header=TRUE)
 boxplot(LCL1_5_SE_TE,names=c("SE","TE"),ylim=c(0,9000), col="red",
         main="SE and TE for hLCL1_5 in LCL1", ylab="ChIP-seq density")
 dev.off()
